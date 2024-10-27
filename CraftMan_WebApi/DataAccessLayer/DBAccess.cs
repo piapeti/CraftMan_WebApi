@@ -29,14 +29,7 @@ namespace CraftMan_WebApi.DataAccessLayer
             sqlCmd.Connection = strConnectionString;
             sqlCmd.CommandType = CommandType.Text;
         }
-        //public void BeginTransaction()
-        //{
-        //    if (sqlCmd.Connection.State == ConnectionState.Closed) {
-
-        //        sqlCmd.Connection.Open();
-        //    }
-        //    sqlTransaction = sqlCmd.Connection.BeginTransaction();
-        //}
+        
         public SqlDataReader  ReadDB(string SQLstr)
         {
             if (strConnectionString.State == ConnectionState.Closed)
