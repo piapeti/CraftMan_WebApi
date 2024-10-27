@@ -1,66 +1,53 @@
-﻿using CraftMan_WebApi.DataAccessLayer;
-using CraftMan_WebApi.Models;
-using Microsoft.Data.SqlClient;
- 
-using System.Data;
+﻿using CraftMan_WebApi.Models;
 
 namespace CraftMan_WebApi.ExtendedModels
 {
     public class Companymasterextended   
     {
-        public static Response RegistrationCompany(CompanyMaster _Company, IConfiguration _configuration)
+        public static Response RegistrationCompany(CompanyMaster _Company )
         {
+            Response strReturn = new Response();
             try
-            {
-                Response strReturn = new Response();
-
-                SqlConnection con = new SqlConnection(_configuration.GetConnectionString("dbconn"));
-                SqlDataAdapter sda = new SqlDataAdapter("select Password from dbo.tblCompanyMaster where upper(EmailId)=upper('" + _Company.EmailId + "') or upper(Username)=upper('" + _Company.Username + "')", con);
-
-                DataTable da = new DataTable();
-                sda.Fill(da);
-                if (da.Rows.Count > 0)
+            {                
+                if (_Company.ValidateCompany(_Company).StatusCode > 0)
                 {
                     strReturn.StatusMessage = "Company already exists...";
                     strReturn.StatusCode = 1;
                 }
                 else
                 {
-                    SqlCommand cmd = new SqlCommand(" INSERT into dbo.tblCompanyMaster(Username,Password,Active,JobType,LocationId,MobileNumber,ContactPerson,EmailId,CreatedOn)     VALUES('" + _Company.Username + "','" + _Company.Password + "','" + _Company.Active + "','" + _Company.UserType + "','" + _Company.LocationId + "','" + _Company.MobileNumber + "','" + _Company.ContactPerson + "','" + _Company.EmailId + "',getdate())", con);
-                    con.Open();
-                    int i = cmd.ExecuteNonQuery();
+                    int i = CompanyMaster.InsertCompany(_Company);
 
-                    con.Close();
                     if (i > 0)
                     {
                         strReturn.StatusCode = 1;
-                        strReturn.StatusMessage = "Comapny Registered Successfully";
+                        strReturn.StatusMessage = "Company Registered Successfully";
                     }
                     else
                     { strReturn.StatusMessage = "Company not registered"; }
                 }
-                return strReturn;
             }
             catch (Exception ex) { throw; }
+            return strReturn;
         }
-
-         public static Response LoginValidateForCompany(LoginUser _User, IConfiguration _configuration) {
+         public static Response LoginValidateForCompany(LoginComp _comp ) {
             try
             {
 
-                Response strReturn = new Response(); 
-                strReturn.StatusMessage= "Invalid Company";
-                strReturn.StatusCode = 1;
-                DBAccess db = new DBAccess(_configuration);
-                SqlDataReader sdr ;
-                string queryString = "select Password from dbo.tblCompanyMaster where Password='" + _User.Password + "' and Active='" + _User.Active + "' and   upper(EmailId)=upper('" + _User.EmailId + "')  ";
-                sdr = db.ReadDB(queryString);
-                if (sdr.HasRows)
+                Response strReturn = new Response();
+                CompanyMaster objCM = new CompanyMaster();
+                objCM.Password= _comp.Password;
+                objCM.EmailId = _comp.EmailId;
+                if (objCM.ValidateCompany(objCM).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "Valid Company!";
-                    strReturn.StatusCode = 1;                    
-                } 
-                sdr.Close ();
+                    strReturn.StatusMessage = "Valid Company ";
+                    strReturn.StatusCode = 1;
+                }
+                else
+                {
+                    strReturn.StatusMessage = "InValid Company ";
+                    strReturn.StatusCode = 0;
+                }
                 return strReturn;
                 
 
