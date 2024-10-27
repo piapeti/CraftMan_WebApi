@@ -16,7 +16,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
                 else
                 {
-                    int i = CompanyMaster.InsertCompany(_Company);
+                    int i = CompanyMaster.InsertCompany(_Company);//joblist added
 
                     if (i > 0)
                     {
