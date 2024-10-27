@@ -21,15 +21,11 @@ namespace CraftMan_WebApi.Models
         public string CompanyName { get; set; }
         public string CompanyRegistrationNumber { get; set; }
         public string CompanyPresentation { get; set; }
-        //  public byte[] Logotype { get; set; }
-        public string CompetenceDescription { get; set; }
+       public string CompetenceDescription { get; set; }
         public string CompanyReferences { get; set; }
-        //public CompanyMaster() { }
+      
         public string[] JobList { get;   set; }
-        //public CompanyMaster(int elements)
-        //{
-        //    JobList = new string[elements];
-        //}
+      
         public Response ValidateCompany(CompanyMaster _Company)
         {
             string qstr = " select Username from dbo.tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";
@@ -43,15 +39,7 @@ namespace CraftMan_WebApi.Models
             int h = 0;
             DBAccess db = new DBAccess();
             int i = db.ExecuteNonQuery(qstr);
-            //if (i > 0)
-            //{
-            //    for (int j = 0; j < _Company.JobList.Length; j++)
-            //    {
-            //        qstr = "Insert into dbo.tblCompanyJobMaster (pCompId,PJobDescription) values ( " + _Company.EmailId + ",'"+ _Company.JobList[j] + "')";
-            //        DBAccess dbnew = new DBAccess();
-            //          h = dbnew.ExecuteNonQuery(qstr);
-            //    }
-            //}
+           
             return i; 
         }
         public static int UpdateCompany(CompanyMaster _Company)
