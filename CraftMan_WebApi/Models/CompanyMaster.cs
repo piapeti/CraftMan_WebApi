@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.Collections.Generic;
 using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.Data.SqlClient;
 
 namespace CraftMan_WebApi.Models
 {
@@ -25,7 +26,44 @@ namespace CraftMan_WebApi.Models
         public string CompanyReferences { get; set; }
       
         public string[] JobList { get;   set; }
-      
+
+
+        public static CompanyMaster GetCompanyDetail(string user)
+        {
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+            string qstr = "  SELECT  Username      ,Password      ,Active      ,UserType      ,pCompId      ,LocationId      ,MobileNumber      ,ContactPerson      ,EmailId      ,CreatedOn      ,UpdatedOn      ,CompanyName      ,CompanyRegistrationNumber      ,CompanyPresentation      ,Logotype      ,CompetenceDescription      ,CompanyReferences      ,JobList  FROM  dbo.tblCompanyMaster where Username='" + user + "'  ";
+            SqlDataReader reader = db.ReadDB(qstr);
+            var pCompanyMaster = new CompanyMaster();
+            while (reader.Read())
+            {
+                pCompanyMaster.Username = (string)reader["Username"];
+                    pCompanyMaster.Password = (string)reader["Password"];
+                pCompanyMaster.Active = Convert.ToBoolean(  reader["Active"]); //(Boolean)reader["Active"];
+                pCompanyMaster.MobileNumber = (string)reader["MobileNumber"];
+
+                pCompanyMaster.LocationId = Convert.ToInt32(reader["LocationId"]);
+                pCompanyMaster.ContactPerson = (string)reader["ContactPerson"];// Convert.ToInt32(reader["TicketId"]);
+                pCompanyMaster.EmailId = (string)reader["EmailId"];
+                if ( reader["CompanyName"].ToString() != "")
+                { pCompanyMaster.CompanyName = (string)reader["CompanyName"]; }
+                    
+                pCompanyMaster.JobList =  reader["JobList"].ToString().Split(",");
+                if (reader["CompanyRegistrationNumber"].ToString() != "") { pCompanyMaster.CompanyRegistrationNumber = (string)reader["CompanyRegistrationNumber"]; }
+                  
+                
+            }
+
+            reader.Close();
+
+            return pCompanyMaster;
+
+        }
+
+
+
+
         public Response ValidateCompany(CompanyMaster _Company)
         {
             string qstr = " select Username from dbo.tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";

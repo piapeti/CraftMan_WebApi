@@ -16,6 +16,12 @@ namespace CraftMan_WebApi.Controllers
 
 
         }
+        [HttpGet]
+        [Route("GetCompanyDetail")]
+        public CompanyMaster GetCompanyDetail(string Username)
+        {
+            return Companymasterextended.GetCompanyDetail(Username);
+        }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

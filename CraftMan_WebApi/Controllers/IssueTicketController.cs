@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Data;
 using System;
+using System.Collections;
 
 namespace CraftMan_WebApi.Controllers
 {
@@ -15,24 +16,38 @@ namespace CraftMan_WebApi.Controllers
         [Route("IssueTicket")]
         public Response IssueTicket(IssueTicket _IssueTicket)
         {
-            Response rstr= new Response();
-            foreach (var item in _IssueTicket.ImageData)
-            {
-                if (item.FileName == null || item.FileName.Length == 0)
-                {
-                    rstr.StatusMessage = "File not selected";
-                    return rstr;
-                }
-                var path = Path.Combine("E:\\developement\\CraftMan_WebApi\\CraftMan_WebApi", "Images/", item.FileName);
-                using (FileStream stream = new FileStream(path, FileMode.Create))
-                {
-                     item.CopyToAsync(stream);
-                    stream.Close();
-                }
+            //Response rstr= new Response();
+            //foreach (var item in _IssueTicket.ImageData)
+            //{
+            //    if (item.FileName == null || item.FileName.Length == 0)
+            //    {
+            //        rstr.StatusMessage = "File not selected";
+            //        return rstr;
+            //    }
+            //    var path = Path.Combine("E:\\developement\\CraftMan_WebApi\\CraftMan_WebApi", "Images/", item.FileName);
+            //    using (FileStream stream = new FileStream(path, FileMode.Create))
+            //    {
+            //         item.CopyToAsync(stream);
+            //        stream.Close();
+            //    }
 
-            }
+            //}
 
             return IssueTicketExtended.IssueNewTicket(_IssueTicket);
         }
+
+        [HttpGet]
+        [Route("GetTickets")]
+        public ArrayList GetTicketsByUser(string Username)
+        {
+            return IssueTicketExtended.GetTicketdetailsByUser(Username);
+        }
+        [HttpGet]
+        [Route("GetTicket")]
+        public IssueTicket GetTicketByUser(int TicketId)
+        {
+            return IssueTicketExtended.GetTicketdetailByUser(TicketId);
+        }
+
     }
 }

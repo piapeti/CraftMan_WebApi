@@ -4,6 +4,12 @@ namespace CraftMan_WebApi.ExtendedModels
 {
     public class Companymasterextended   
     {
+        public static CompanyMaster GetCompanyDetail(string Username)
+        {
+            return CompanyMaster.GetCompanyDetail(Username);
+
+
+        }
         public static Response RegistrationCompany(CompanyMaster _Company )
         {
             Response strReturn = new Response();
