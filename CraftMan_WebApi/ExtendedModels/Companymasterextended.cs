@@ -1,4 +1,6 @@
 ﻿using CraftMan_WebApi.Models;
+using System;
+using System.Collections;
 
 namespace CraftMan_WebApi.ExtendedModels
 {
@@ -10,6 +12,28 @@ namespace CraftMan_WebApi.ExtendedModels
 
 
         }
+        public  static int GetTotalcnt(string Username)
+        {
+            return CompanyMaster.GetTotalcnt(Username);
+
+
+        }
+        public static int GetActivecountnoofcraftsman(string Username)
+        {
+            return CompanyMaster.GetTotalcnt(Username);
+
+
+         
+    }
+
+
+        public static ArrayList GetCompEmployeeList(string _user)
+        {
+            return CompanyEmp.GetCompEmplist(_user);
+
+
+        }
+
         public static Response RegistrationCompany(CompanyMaster _Company )
         {
             Response strReturn = new Response();

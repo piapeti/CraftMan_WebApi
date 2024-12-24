@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.Data.SqlClient;
+using System.Collections;
 
 namespace CraftMan_WebApi.Models
 {
@@ -26,7 +27,7 @@ namespace CraftMan_WebApi.Models
         public string CompanyReferences { get; set; }
       
         public string[] JobList { get;   set; }
-
+        public string[] CompanyEmplist { get; set; }
 
         public static CompanyMaster GetCompanyDetail(string user)
         {
@@ -62,8 +63,48 @@ namespace CraftMan_WebApi.Models
         }
 
 
+        //public static int GetActivecountnoofcraftsman(string user) { int cnt = 0;
+
+        //    DBAccess db = new DBAccess();
+        //    Response strReturn = new Response();
+        //    string qstr = " select count(*)Activecount from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user + "'   ";
+        //    SqlDataReader reader = db.ReadDB(qstr);
+
+        //    while (reader.Read())
+        //    {
+        //        cnt = (int)reader["Activecount"];
+
+        //    }
+
+        //    reader.Close();
+        //    return cnt;
+        //}
+        public static int GetTotalcnt(string user)
+        {
 
 
+            int cnt = 0;
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+            string qstr = " select count(*)totaljobrequest from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user + "'   ";
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {              
+                cnt = (int)reader["totaljobrequest"];
+              
+            }
+
+            reader.Close();
+
+            
+
+            return cnt;
+
+        }
+
+
+        
         public Response ValidateCompany(CompanyMaster _Company)
         {
             string qstr = " select Username from dbo.tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";
