@@ -8,19 +8,22 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static CompanyMaster GetCompanyDetail(string Username)
         {
-            return CompanyMaster.GetCompanyDetail(Username);
+            CompanyMaster c1 =new CompanyMaster ();
+            return c1.GetCompanyDetail(Username);
 
 
         }
         public  static int GetTotalcnt(string Username)
         {
-            return CompanyMaster.GetTotalcnt(Username);
+            CompanyMaster c1 = new CompanyMaster();
+            return c1.GetTotalcnt(Username);
 
 
         }
         public static int GetActivecountnoofcraftsman(string Username)
         {
-            return CompanyMaster.GetTotalcnt(Username);
+            CompanyMaster c1 = new CompanyMaster();
+            return c1.GetTotalcnt(Username);
 
 
          
@@ -46,7 +49,9 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
                 else
                 {
-                    int i = CompanyMaster.InsertCompany(_Company);//joblist added
+                    int i = 0;
+                    CompanyMaster c1 = new CompanyMaster();
+                    i= c1.InsertCompany(_Company);//joblist added
 
                     if (i > 0)
                     {

@@ -12,6 +12,22 @@ namespace CraftMan_WebApi.DataAccessLayer
         private SqlCommand sqlCmd;
         private SqlTransaction sqlTransaction;
 
+
+
+       // private SqlConnection _connection;
+      //  private SqlTransaction _transaction;
+
+        public void InitializeConnection(string connectionString)
+        {
+            strConnectionString = new SqlConnection(connectionString);
+            strConnectionString.Open();
+        }
+
+        public void BeginTransaction()
+        {
+            sqlTransaction = strConnectionString.BeginTransaction();
+        }
+
         public DBAccess()
         {
 
@@ -25,9 +41,7 @@ namespace CraftMan_WebApi.DataAccessLayer
 
           //  strConnection = ConfigurationManager.AppSettings["DBConnectionString1"];
             strConnectionString = new SqlConnection(strConnection);  
-            sqlCmd = new SqlCommand();
-            sqlCmd.Connection = strConnectionString;
-            sqlCmd.CommandType = CommandType.Text;
+            
         }
         
         public SqlDataReader  ReadDB(string SQLstr)
@@ -63,8 +77,46 @@ namespace CraftMan_WebApi.DataAccessLayer
             return strReturn;
 
         }
-        
 
+        public void AddParameter(string paramName, object paramValue, ParameterDirection paramDir = ParameterDirection.Input)
+        {
+            SqlParameter param = new SqlParameter(paramName, SqlDbType.VarChar)
+            {
+                Value = paramValue,
+                Direction = paramDir,
+                Size = 5000
+            };
+
+            sqlCmd.Parameters.Add(param);
+        }
+
+        public object ExecuteScalar(string commandText, CommandType cmdType = CommandType.StoredProcedure)
+        {
+            object obj = null;
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    if (sqlTransaction != null)
+                    {
+                        // User has invoked a transaction. So add the Transaction to the command object
+                        cmd.Transaction = sqlTransaction;
+                    }
+                    cmd.CommandType = cmdType;
+                    cmd.CommandText = commandText;
+                    cmd.Connection = strConnectionString;
+
+                    obj = cmd.ExecuteScalar();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (log it, rethrow it, etc.)
+                Logger.Error("Error executing scalar command", ex);
+                throw;
+            }
+            return obj;
+        }
 
         public int ExecuteNonQuery(string qstr) {
            
@@ -77,5 +129,6 @@ namespace CraftMan_WebApi.DataAccessLayer
            sqlCmd.CommandType = CommandType.Text; 
             return sqlCmd.ExecuteNonQuery();
         }
+        
     }
 }
